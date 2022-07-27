@@ -15,9 +15,9 @@ module RouteXL
       HTTP.basic_auth(user: @username, pass: @password).get('https://api.routexl.com/status').code
     end
 
-    def distances(array, maxDistance*)
+    def distances(array)
       location_check(array)
-      body = maxDistance = [] ? "locations=#{array.to_json}": "locations=#{array.to_json}&maxDistance=#{maxDistance[0]}"
+      body = "locations=#{array.to_json}"
 
       response = HTTP.basic_auth(user: @username, pass: @password).post('https://api.routexl.com/distancs', body: body)
       response_check(response.code)
