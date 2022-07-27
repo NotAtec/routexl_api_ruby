@@ -5,8 +5,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.2"
 
-# gem "rails"
+gem "rspec", "~> 3.11"
 
-gem "httpx", "~> 0.20.3"
+gem "pry-byebug", "~> 3.9"
 
-gem "oj", "~> 3.13"
+
+gem "http", "~> 5.1"
