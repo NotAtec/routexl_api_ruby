@@ -2,6 +2,7 @@
 
 require "http"
 require 'pry-byebug'
+require 'json'
 
 module RouteXL
   class RouteAPI
@@ -48,6 +49,56 @@ module RouteXL
     end
   end
 
+  class Location
+    def initialize(address, lat, lng, servicetime = 5, *restrictions)
+      @address = address
+      @latitude = lat
+      @longitude = lng
+      @st = servicetime
+      setup(restrictions)
+    end
+  
+    def as_json(options={})
+      {
+        address: @address,
+        lat: @latitude,
+        lng: @longitude,
+        servicetime: @st,
+        ready: @ready,
+        due: @due,
+        before: @before,
+        after: @after
+      }
+    end
+  
+    def to_json(*options)
+      as_json(*options).to_json(*options)
+    end
+  
+    private
+  
+    def setup(restrictions)
+      case restrictions.length
+      when 0
+      when 1
+        @ready = restrictions[0]
+      when 2
+        @ready = restrictions[0]
+        @due = restrictions[1]
+      when 3
+        @ready = restrictions[0]
+        @due = restrictions[1]
+      when 4
+        @ready = restrictions[0]
+        @due = restrictions[1]
+        @before = restrictions[2] if restrictions[3] == 'before'
+        @after = restrictions[2] if restrictions[3] == 'after'
+      else
+        raise RestrictionAmountError
+      end
+    end
+  end
+
   class ClassError < StandardError
     def initialize(msg="Not all objects in array are of correct class")
       super
@@ -79,5 +130,11 @@ module RouteXL
   end
 
   class NotFoundError < StandardError
+  end
+
+  class RestrictionAmountError < StandardError
+    def initialize(msg="Too many restrictions entered")
+      super
+    end
   end
 end
