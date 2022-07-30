@@ -4,32 +4,43 @@ require_relative '../lib/route_xl'
 
 describe RouteXL do
   let(:client) { RouteXL::RouteAPI.new('user', 'pass') }
+  let(:bad_client) { RouteXL::RouteAPI.new('baduser', 'badpass') }
 
   describe '#status' do
-    context 'correct response with valid auth keys' do
-      let(:response) do
-        {
-          #TD: Add copied response
-        }
-      end
-
+    context 'correct response with valid auth keys' do  
+      before do
+        stub_request(:get, "https://api.routexl.com/status").
+        with(
+          headers: {
+          'Authorization'=>'Basic dXNlcjpwYXNz',
+          'Connection'=>'close',
+          'Host'=>'api.routexl.com',
+          'User-Agent'=>'http.rb/5.1.0'
+          },
+          basic_auth: ['user', 'pass']).
+        to_return(status: 200, body: "", headers: {})
+        end
       it 'returns the correct response' do
-        stub_request(:get, 'https://api.routexl.com/status/').to_return(body: response)
-        expect(client.status).to eql('200')
+        expect(client.status).to eql(200)
       end
     end
 
     context 'correct response with invalid auth keys' do
-      let(:bad_client) { RouteXL::RouteAPI.new('baduser', 'badpass') }
-      let(:response) do
-        {
-          #TD: Add copied response
-        }
+      before do
+        stub_request(:get, "https://api.routexl.com/status").
+        with(
+          headers: {
+          'Authorization'=>'Basic dXNlcjpwYXNz',
+          'Connection'=>'close',
+          'Host'=>'api.routexl.com',
+          'User-Agent'=>'http.rb/5.1.0'
+          },
+          basic_auth: ['baduser', 'badpass']).
+        to_return(status: 401, body: "", headers: {})
       end
 
       it 'returns the correct response' do
-        stub_request(:get, 'https://api.routexl.com/status/').to_return(body: response)
-        expect(client.status).to eql('401')
+        expect(bad_client.status).to eql(401)
       end
     end
   end
