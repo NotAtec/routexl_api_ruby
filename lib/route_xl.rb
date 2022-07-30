@@ -26,6 +26,16 @@ module RouteXL
       response.parse
     end
 
+    def tour(locations_arr)
+      location_check(locations_arr)
+      body = "locations=#{locations_arr.to_json}"
+
+      response = HTTP.basic_auth(user: @username, pass: @password).post('https://api.routexl.com/tour', body: body)
+      response_check(response.code)
+
+      response.parse
+    end
+
     private
 
     def location_check(array)
