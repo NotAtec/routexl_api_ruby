@@ -11,3 +11,5 @@ gem "pry-byebug", "~> 3.9"
 
 
 gem "http", "~> 5.1"
+
+gem "webmock", "~> 3.14"
