@@ -20,7 +20,7 @@ module RouteXL
       location_check(locations_arr)
       body = "locations=#{locations_arr.to_json}"
 
-      response = HTTP.basic_auth(user: @username, pass: @password).post('https://api.routexl.com/distancs', body: body)
+      response = HTTP.basic_auth(user: @username, pass: @password).post('https://api.routexl.com/distances', body: body)
       response_check(response.code)
 
       response.parse
