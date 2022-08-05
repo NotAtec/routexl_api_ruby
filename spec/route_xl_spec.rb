@@ -24,25 +24,6 @@ describe RouteXL do
         expect(client.status).to eql(200)
       end
     end
-
-    context 'correct response with invalid auth keys' do
-      before do
-        stub_request(:get, "https://api.routexl.com/status").
-        with(
-          headers: {
-          'Authorization'=>'Basic dXNlcjpwYXNz',
-          'Connection'=>'close',
-          'Host'=>'api.routexl.com',
-          'User-Agent'=>'http.rb/5.1.0'
-          },
-          basic_auth: ['baduser', 'badpass']).
-        to_return(status: 401, body: "", headers: {})
-      end
-
-      it 'returns the correct response' do
-        expect(bad_client.status).to eql(401)
-      end
-    end
   end
 
   describe '#distances' do
