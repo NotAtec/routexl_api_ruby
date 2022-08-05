@@ -17,26 +17,27 @@ module RouteXL
     end
 
     def distances(locations_arr)
-      location_check(locations_arr)
-      body = "locations=#{locations_arr.to_json}"
-
-      response = HTTP.basic_auth(user: @username, pass: @password).post('https://api.routexl.com/distances', body: body)
-      response_check(response.code)
-
-      response.parse
+      body = location_setup(locations_arr)
+      basic_request(locations_arr, body, 'distances')
     end
 
     def tour(locations_arr)
-      location_check(locations_arr)
-      body = "locations=#{locations_arr.to_json}"
-
-      response = HTTP.basic_auth(user: @username, pass: @password).post('https://api.routexl.com/tour', body: body)
-      response_check(response.code)
-
-      response.parse
+      body = location_setup(locations_arr)
+      basic_request(locations_arr, body, 'tour')
     end
 
     private
+
+    def location_setup(locations_arr)
+      location_check(locations_arr)
+      "locations=#{locations_arr.to_json}"
+    end
+
+    def basic_request(locations_arr, body, req)
+      response = HTTP.basic_auth(user: @username, pass: @password).post("https://api.routexl.com/#{req}", body: body)
+      response_check(response.code)
+      response.parse
+    end
 
     def location_check(array)
       raise ClassError.new("Not all objects in array are instance of Location") unless array.all? { |element| element.instance_of? Location }
