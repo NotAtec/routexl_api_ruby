@@ -29,7 +29,7 @@ module RouteXL
     private
 
     def location_setup(locations_arr)
-      location_check(locations_arr)
+      Location.check(locations_arr)
       "locations=#{locations_arr.to_json}"
     end
 
@@ -37,10 +37,6 @@ module RouteXL
       response = HTTP.basic_auth(user: @username, pass: @password).post("https://api.routexl.com/#{req}", body: body)
       response_check(response.code)
       response.parse
-    end
-
-    def location_check(array)
-      raise ClassError.new("Not all objects in array are instance of Location") unless array.all? { |element| element.instance_of? Location }
     end
 
     def response_check(code)
@@ -86,6 +82,10 @@ module RouteXL
       as_json(*options).to_json(*options)
     end
   
+    def self.check(array)
+      raise ClassError.new("Not all objects in array are instance of Location") unless array.all? { |element| element.instance_of? self }
+    end
+
     private
   
     def setup(restrictions)
